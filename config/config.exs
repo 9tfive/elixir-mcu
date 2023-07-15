@@ -59,12 +59,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :exvcr,
-  cassette_library_dir: "test/support/exvcr_cassettes",
-  adapters: [
-    {:exvcr_adapter_hackney, %{}}
-  ]
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
