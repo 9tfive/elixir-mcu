@@ -1,0 +1,5 @@
+{
+    "scripts": {
+      "deploy": "cd .. && mix setup && rm -f _build/esbuild* && mix assets.deploy"
+    }
+  }
