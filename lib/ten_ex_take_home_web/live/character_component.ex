@@ -6,7 +6,7 @@ defmodule TenExTakeHomeWeb.Components.CharacterComponent do
       ~H"""
       <div>
         <.header>
-          <div class="text-white bg-gray-800 rounded-md hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white p-4 border border-gray-300 transform hover:scale-105 transition-transform duration-300">
+          <div class="text-white bg-gray-800 rounded-md hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white p-4 border border-gray-300">
             <img
               src={"#{assigns.character.thumbnail.path}.#{assigns.character.thumbnail.extension}"}
               alt={assigns.character.name}
