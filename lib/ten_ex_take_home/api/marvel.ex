@@ -2,22 +2,13 @@ defmodule TenExTakeHome.Api.Marvel do
   @api_base_url "http://gateway.marvel.com/v1/public/characters"
   @keys_to_keep [:id, :name, :description, :thumbnail]
   @default_limit 20
+  @cache_name :characters_cache
 
   def fetch_characters(page \\ 1) do
-    case Cachex.get(:characters_cache, page) do
-      {:ok, nil} ->
-        {total_characters_count, characters} = fetch_characters_from_api(page)
-        Cachex.put(:characters_cache, page, characters)
-        Cachex.put(:characters_cache, :total_characters_count, total_characters_count)
-        {total_characters_count, characters}
-
-      {:ok, characters} ->
-        {:ok, total_characters_count} = Cachex.get(:characters_cache, :total_characters_count)
-        {total_characters_count, characters}
-
-      error ->
-        error
+    with {:ok, nil} <- Cachex.get(@cache_name, page) do
+      fetch_characters_from_api(page)
     end
+    |> handle_fetch_cache()
   end
 
   def fetch_characters_from_api(page) do
@@ -27,11 +18,24 @@ defmodule TenExTakeHome.Api.Marvel do
     case HTTPoison.get(url, headers) do
       {:ok, %{body: body}} ->
         api_analytics(page)
-        parse_response(body)
+
+        {page, parse_response(body)}
 
       {:error, response} ->
+        api_analytics(page, response.reason)
         {:error, response}
     end
+  end
+
+  defp handle_fetch_cache({:error, _reason}), do: {nil, []}
+
+  defp handle_fetch_cache({:ok, characters}),
+    do: {Cachex.get!(@cache_name, :total_characters_count), characters}
+
+  defp handle_fetch_cache({page, {count, characters}}) do
+    Cachex.put(@cache_name, page, characters)
+    Cachex.put(@cache_name, :total_characters_count, count)
+    {count, characters}
   end
 
   defp build_url(page) do
@@ -46,13 +50,15 @@ defmodule TenExTakeHome.Api.Marvel do
     "#{@api_base_url}?ts=#{ts}&apikey=#{get_api_key()}&hash=#{hash}&offset=#{page_offset(page)}&limit=#{@default_limit}"
   end
 
-  defp api_analytics(page),
+  defp api_analytics(page, reason \\ nil),
     do:
-      TenExTakeHome.Repo.insert!(%TenExTakeHome.Schema.ApiCallTimestamps{
+      %{
         timestamp: DateTime.utc_now() |> DateTime.truncate(:second),
         query_offset: page_offset(page) |> trunc,
-        page_limit: @default_limit
-      })
+        page_limit: @default_limit,
+        error_reason: reason
+      }
+      |> TenExTakeHome.Schema.ApiCallTimestamps.create_timestamp()
 
   defp page_offset(page), do: @default_limit * (page - 1)
 
