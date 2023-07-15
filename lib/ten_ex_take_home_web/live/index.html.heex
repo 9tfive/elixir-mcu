@@ -1,81 +1,92 @@
 <.header>
-    Marvel Characters
-  </.header>
-  
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-    <%= if @characters do %>
-      <%= for character <- @characters do %>
-        <div
-          class="text-white bg-gray-800 rounded-md hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white p-4 border border-gray-300 transform hover:scale-105 transition-transform duration-300">
-          <img
-            src={"#{character.thumbnail.path}.#{character.thumbnail.extension}"}
-            alt={character.name}
-            class="w-full h-auto rounded-md"
-          />
-          <p class="text-center text-white mt-2 font-bold"><%= character.name %></p>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
-  <div class="mt-10">
-    <div class="flex flex-col items-center">
-      <!-- Help text -->
-      <span class="text-sm text-gray-700 dark:text-gray-400">
-        Showing
-        <span class="font-semibold text-gray-900 dark:text-white"><%= @page_offset + 1 %></span>
-        to <span class="font-semibold text-gray-900 dark:text-white"><%= @page_offset + 20 %></span>
-        of
-        <span class="font-semibold text-gray-900 dark:text-white">
-          <%= @total_characters_count %>
-        </span>
-        Entries
-      </span>
-      <div class="inline-flex mt-2 xs:mt-0">
-        <!-- Buttons -->
-        <button
-          disabled={@disable_previous}
-          phx-click="previous"
-          class="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          <svg
-            class="w-3.5 h-3.5 mr-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 10"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 5H1m0 0 4 4M1 5l4-4"
-            />
-          </svg>
-          Prev
-        </button>
-        <button
-          disabled={@disable_next}
-          phx-click="next"
-          class="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-        >
-          Next
-          <svg
-            class="w-3.5 h-3.5 ml-2"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 10"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M1 5h12m0 0L9 1m4 4L9 9"
-            />
-          </svg>
-        </button>
+  Marvel Characters
+</.header>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+  <%= if @characters do %>
+    <%= for character <- @characters do %>
+      <div
+        class="text-white bg-gray-800 rounded-md hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white p-4 border border-gray-300 transform hover:scale-105 transition-transform duration-300"
+        phx-click="show_character"
+        phx-value-character={Jason.encode!(character)}
+      >
+        <img
+          src={"#{character.thumbnail.path}.#{character.thumbnail.extension}"}
+          alt={character.name}
+          class="w-full h-auto rounded-md"
+        />
+        <p class="text-center text-white mt-2 font-bold"><%= character.name %></p>
       </div>
+    <% end %>
+  <% end %>
+</div>
+<div class="mt-10">
+  <div class="flex flex-col items-center">
+    <!-- Help text -->
+    <span class="text-sm text-gray-700 dark:text-gray-400">
+      Showing
+      <span class="font-semibold text-gray-900 dark:text-white"><%= @page_offset + 1 %></span>
+      to <span class="font-semibold text-gray-900 dark:text-white"><%= @page_offset + 20 %></span>
+      of
+      <span class="font-semibold text-gray-900 dark:text-white">
+        <%= @total_characters_count %>
+      </span>
+      Entries
+    </span>
+    <div class="inline-flex mt-2 xs:mt-0">
+      <!-- Buttons -->
+      <button
+        disabled={@disable_previous}
+        phx-click="previous"
+        class="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+      >
+        <svg
+          class="w-3.5 h-3.5 mr-2"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 10"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M13 5H1m0 0 4 4M1 5l4-4"
+          />
+        </svg>
+        Prev
+      </button>
+      <button
+        disabled={@disable_next}
+        phx-click="next"
+        class="flex items-center justify-center px-4 h-10 text-base font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+      >
+        Next
+        <svg
+          class="w-3.5 h-3.5 ml-2"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 10"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M1 5h12m0 0L9 1m4 4L9 9"
+          />
+        </svg>
+      </button>
     </div>
   </div>
+</div>
+
+<.modal :if={@selected_character} id="character_view" on_cancel={JS.patch(~p"/")} show>
+  <.live_component
+    module={TenExTakeHomeWeb.Components.CharacterComponent}
+    id="character_view_modal"
+    character={@selected_character}
+  />
+</.modal>

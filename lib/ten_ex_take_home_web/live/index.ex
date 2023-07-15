@@ -12,8 +12,18 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
       |> assign(:page_offset, 0)
       |> assign(:disable_previous, true)
       |> assign(:disable_next, false)
+      |> assign(:selected_character, nil)
 
     {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(params, _url, socket) do
+    socket =
+      socket
+      |> assign(:selected_character, nil)
+
+    {:noreply, socket}
   end
 
   @impl true
@@ -32,6 +42,7 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
       |> assign(:page_offset, page_offset)
       |> assign(:disable_previous, disable_previous)
       |> assign(:disable_next, disable_next)
+      |> assign(:selected_character, nil)
 
     {:noreply, socket}
   end
@@ -52,6 +63,16 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
       |> assign(:page_offset, page_offset)
       |> assign(:disable_previous, disable_previous)
       |> assign(:disable_next, disable_next)
+      |> assign(:selected_character, nil)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("show_character", %{"character" => character}, socket) do
+    socket =
+      socket
+      |> assign(:selected_character, character |> Jason.decode!(keys: :atoms))
 
     {:noreply, socket}
   end
