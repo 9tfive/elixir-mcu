@@ -4,7 +4,6 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     {total_characters_count, characters} = TenExTakeHome.Api.Marvel.fetch_characters()
-    |> IO.inspect(label: "MOUNT results")
 
     socket =
       socket
