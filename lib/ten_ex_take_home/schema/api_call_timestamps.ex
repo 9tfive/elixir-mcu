@@ -21,8 +21,8 @@ defmodule TenExTakeHome.Schema.ApiCallTimestamps do
   end
 
   def create_timestamp(attrs) do
-    # %ApiCallTimestamps{}
-    # |> changeset(attrs)
-    # |> Repo.insert!
+    %ApiCallTimestamps{}
+    |> changeset(attrs)
+    |> Repo.insert
   end
 end
