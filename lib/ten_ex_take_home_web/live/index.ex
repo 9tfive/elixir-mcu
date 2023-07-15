@@ -4,6 +4,7 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     {total_characters_count, characters} = TenExTakeHome.Api.Marvel.fetch_characters()
+    |> IO.inspect(label: "MOUNT results")
 
     socket =
       socket
@@ -18,7 +19,7 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
   end
 
   @impl true
-  def handle_params(params, _url, socket) do
+  def handle_params(_params, _url, socket) do
     socket =
       socket
       |> assign(:selected_character, nil)
@@ -51,7 +52,7 @@ defmodule TenExTakeHomeWeb.PageLive.Index do
   def handle_event("previous", _params, socket) do
     page_offset = socket.assigns.page_offset - 20
 
-    {total_characters_count, characters} =
+    {_, characters} =
       TenExTakeHome.Api.Marvel.fetch_characters(page_offset / 20 + 1)
 
     disable_previous = page_offset == 0
