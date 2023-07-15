@@ -13,5 +13,9 @@ config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: TenExTakeHome.Fi
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :ten_ex_take_home, :marvel_api,
+  public_key: System.get_env("API_KEY"),
+  private_key: System.get_env("API_SECRET")
+
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
